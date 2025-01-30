@@ -76,8 +76,8 @@ public class MemorySpace {
 				if (current.length > length) {
 					MemoryBlock block = new MemoryBlock(current.baseAddress, length);
 					allocatedList.addLast(block);
-					current.baseAddress += length;
-					current.length -= length;
+					current.baseAddress = current.baseAddress + length;
+					current.length = current.length - length;
 					return block.baseAddress;
 				}
 			}
@@ -95,8 +95,7 @@ public class MemorySpace {
 	 */
 	public void free(int address) {
 		if(allocatedList.getSize() == 0){
-			throw new IllegalArgumentException(
-					"index must be between 0 and list size");
+			throw new IllegalArgumentException("index must be between 0 and size");
 			}
 			ListIterator allocatedListIterator = allocatedList.iterator();
 			MemoryBlock foundBlock = null;
