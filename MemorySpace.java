@@ -59,7 +59,7 @@ public class MemorySpace {
 	 */
 	public int malloc(int length) {		
 		if (length <= 0) {
-			throw new IllegalArgumentException("Invalid request: size must be greater than zero");
+			throw new IllegalArgumentException("length must be greater than zero");
 		}
 	
 		ListIterator freeIterator = freeList.iterator();
@@ -96,22 +96,22 @@ public class MemorySpace {
 	public void free(int address) {
 		if(allocatedList.getSize() == 0){
 			throw new IllegalArgumentException(
-					"Invalid request: index must be between 0 and list size");
+					"index must be between 0 and list size");
 			}
-			ListIterator allocatedIterator = allocatedList.iterator();
-			MemoryBlock targetBlock = null;
+			ListIterator allocatedListIterator = allocatedList.iterator();
+			MemoryBlock foundBlock = null;
 	
-			while (allocatedIterator.hasNext()){
-				MemoryBlock current = allocatedIterator.next();
+			while (allocatedListIterator.hasNext()){
+				MemoryBlock current = allocatedListIterator.next();
 				if (current.baseAddress == address){
-					targetBlock = current;
+					foundBlock = current;
 					 break;
 				}
 			}
 	
-			if (targetBlock != null){
-				freeList.addLast(targetBlock);
-				allocatedList.remove(targetBlock);
+			if (foundBlock != null){
+				freeList.addLast(foundBlock);
+				allocatedList.remove(foundBlock);
 			}
 		}
 	
