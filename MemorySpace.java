@@ -59,7 +59,7 @@ public class MemorySpace {
 	 */
 	public int malloc(int length) {		
 		if (length <= 0) {
-			throw new IllegalArgumentException("Length must be positive");
+			throw new IllegalArgumentException("Invalid request: size must be greater than zero");
 		}
 	
 		ListIterator freeIterator = freeList.iterator();
@@ -71,15 +71,17 @@ public class MemorySpace {
 				allocatedList.addLast(current);
 				freeList.remove(current);
 				return current.baseAddress;
-			} else if (current.length > length) {
-				MemoryBlock block = new MemoryBlock(current.baseAddress, length);
-				allocatedList.addLast(block);
-				current.baseAddress += length;
-				current.length -= length;
-				return block.baseAddress;
+			} 
+			else {
+				if (current.length > length) {
+					MemoryBlock block = new MemoryBlock(current.baseAddress, length);
+					allocatedList.addLast(block);
+					current.baseAddress += length;
+					current.length -= length;
+					return block.baseAddress;
+				}
 			}
 		}
-	
 		return -1;
 	}
 
@@ -94,7 +96,7 @@ public class MemorySpace {
 	public void free(int address) {
 		if(allocatedList.getSize() == 0){
 			throw new IllegalArgumentException(
-					"index must be between 0 and size");
+					"Invalid request: index must be between 0 and list size");
 			}
 			ListIterator allocatedIterator = allocatedList.iterator();
 			MemoryBlock targetBlock = null;
@@ -131,18 +133,18 @@ public class MemorySpace {
 			return; 
 		}
 	
-		ListIterator freeIterator = freeList.iterator();
-		while (freeIterator.hasNext()) {
-			MemoryBlock currentBlock = freeIterator.next();
-			ListIterator innerIterator = freeList.iterator();
+		ListIterator Iterator = freeList.iterator();
+		while (Iterator.hasNext()) {
+			MemoryBlock currentBlock = Iterator.next();
+			ListIterator InIterator = freeList.iterator();
 
-			while (innerIterator.hasNext()) {
-				MemoryBlock nextBlock = innerIterator.next();
+			while (InIterator.hasNext()) {
+				MemoryBlock nextBlock = InIterator.next();
 	
 				if (nextBlock != currentBlock && currentBlock.baseAddress + currentBlock.length == nextBlock.baseAddress) {
 					currentBlock.length += nextBlock.length;
 					freeList.remove(nextBlock);
-					innerIterator = freeList.iterator();
+					InIterator = freeList.iterator();
 				}
 			}
 		}

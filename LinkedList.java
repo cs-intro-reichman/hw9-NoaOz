@@ -88,32 +88,32 @@ public class LinkedList {
 	 *         if index is negative or greater than the list's size
 	 */
 	public void add(int index, MemoryBlock block) {
-		if (index < 0 || index > size) {
+		if (index > size || index < 0) {
 			throw new IllegalArgumentException(
 					"index must be between 0 and size");
 		}
-
-		Node newNode = new Node(block);
-
+		Node NewNode = new Node(block);
 		if (index == 0) { 
-			newNode.next = first;
-			first = newNode;
+			NewNode.next = first;
+			first = NewNode;
 			if (size == 0) { 
-				last = newNode;
+				last = NewNode;
 			}
-		} else if (index == size) { 
-			last.next = newNode;
-			last = newNode;
 		} 
-		else { 
-			Node current = first;
-			for (int i = 0; i < index - 1; i++) {
+		else {
+			if (index == size) { 
+			last.next = NewNode;
+			last = NewNode;
+		} 
+			else { 
+				Node current = first;
+				for (int i = 0; i < index - 1; i++) {
 				current = current.next;
-			}
-			newNode.next = current.next;
-			current.next = newNode;
+				}
+				NewNode.next = current.next;
+				current.next = NewNode;
 		}
-
+	}
 		size++;
 	}
 	/**
@@ -191,17 +191,17 @@ public class LinkedList {
 			size--;
 			return;
 		}
-		Node pre = first;
+		Node previous = first;
 		Node current = first.next;
 		while (current != null) {
 			if (current.equals(node)){
-				pre.next = current.next;
-				if (current.equals(last)) last = pre;
+				previous.next = current.next;
+				if (current.equals(last)) last = previous;
 				size--;
 				return;
 			}
 			current = current.next;
-			pre = pre.next;
+			previous = previous.next;
 		}
 	}
 	/**
@@ -248,16 +248,18 @@ public class LinkedList {
 		if (size == 0) {
 			return "";
 		}
+
 		String result = "";
 		ListIterator iterator = new ListIterator(first);
+
 		while (iterator.hasNext()) {
-			result += iterator.current.block;
+			result = result + iterator.current.block;
 			iterator.next();			
 			if (iterator.hasNext()) {
-				result += " ";
+				result = result + " ";
 			}
 		}
-		result += " ";
+		result = result + " ";
 		return result;
 	}
 }
